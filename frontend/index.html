@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgroManager - Gerenciamento Agrícola</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo h1 {
+            color: #667eea;
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+
+        .logo p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        input[type="email"],
+        input[type="password"],
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="email"]:focus,
+        input[type="password"]:focus,
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 5px rgba(102, 126, 234, 0.1);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .toggle-btn {
+            background: #f0f0f0;
+            color: #667eea;
+            margin-top: 10px;
+            width: auto;
+            padding: 8px 15px;
+            font-size: 14px;
+            margin-left: auto;
+            display: block;
+        }
+
+        .toggle-btn:hover {
+            background: #e0e0e0;
+        }
+
+        .error {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .success {
+            color: #27ae60;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        #dashboard {
+            background: white;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .nav-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-header h2 {
+            margin: 0;
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 15px;
+            border-radius: 5px;
+            width: auto;
+            margin: 0;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #ddd;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 15px 20px;
+            cursor: pointer;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-section {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .form-section h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-row.full {
+            grid-template-columns: 1fr;
+        }
+
+        .result-box {
+            background: #e8f5e9;
+            border-left: 4px solid #27ae60;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        .result-box h4 {
+            color: #27ae60;
+            margin-bottom: 10px;
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .result-row:last-child {
+            border-bottom: none;
+        }
+
+        .result-value {
+            font-weight: 600;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table th {
+            background: #667eea;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+
+        table td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        table tr:hover {
+            background: #f9f9f9;
+        }
+
+        .action-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-right: 5px;
+        }
+
+        .action-btn.delete {
+            background: #e74c3c;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 600px) {
+            .login-container {
+                padding: 20px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab-btn {
+                border-bottom: none;
+                border-left: 3px solid transparent;
+            }
+
+            .tab-btn.active {
+                border-left-color: #667eea;
+                border-bottom: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Login Section -->
+<div id="loginContainer" class="login-container">
+    <div class="logo">
+        <h1>🌾 AgroManager</h1>
+        <p>Sistema de Gerenciamento Agrícola</p>
+    </div>
+
+    <!-- Login Form -->
+    <form id="loginForm" class="hidden">
+        <div class="form-group">
+            <label for="loginEmail">Email</label>
+            <input type="email" id="loginEmail" required>
+        </div>
+        <div class="form-group">
+            <label for="loginPassword">Senha</label>
+            <input type="password" id="loginPassword" required>
+        </div>
+        <div id="loginError" class="error"></div>
+        <button type="submit">Entrar</button>
+        <button type="button" class="toggle-btn" onclick="toggleForm()">Criar Conta</button>
+    </form>
+
+    <!-- Register Form -->
+    <form id="registerForm">
+        <div class="form-group">
+            <label for="registerEmail">Email</label>
+            <input type="email" id="registerEmail" required>
+        </div>
+        <div class="form-group">
+            <label for="registerPassword">Senha</label>
+            <input type="password" id="registerPassword" required>
+        </div>
+        <div class="form-group">
+            <label for="registerRole">Função</label>
+            <select id="registerRole">
+                <option value="creator">Criador</option>
+                <option value="editor">Editor</option>
+                <option value="viewer">Visualizador</option>
+            </select>
+        </div>
+        <div id="registerError" class="error"></div>
+        <div id="registerSuccess" class="success"></div>
+        <button type="submit">Registrar</button>
+        <button type="button" class="toggle-btn" onclick="toggleForm()">Já tem conta?</button>
+    </form>
+</div>
+
+<!-- Dashboard Section -->
+<div id="dashboard" class="hidden">
+    <div class="nav-header">
+        <div>
+            <h2>🌾 AgroManager Dashboard</h2>
+            <p id="userEmail"></p>
+        </div>
+        <button class="logout-btn" onclick="logout()">Sair</button>
+    </div>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('romaneios')">Romaneios</button>
+        <button class="tab-btn" onclick="switchTab('fazendas')">Fazendas</button>
+        <button class="tab-btn" onclick="switchTab('talhoes')">Talhões</button>
+        <button class="tab-btn" onclick="switchTab('empresas')">Empresas</button>
+    </div>
+
+    <!-- Romaneios Tab -->
+    <div id="romaneios" class="tab-content active">
+        <div class="form-section">
+            <h3>Calcular Romaneio</h3>
+            <div class="form-row">
+                <div>
+                    <label for="romEmpresa">Empresa *</label>
+                    <select id="romEmpresa"></select>
+                </div>
+                <div>
+                    <label for="romCereal">Cereal *</label>
+                    <select id="romCereal"></select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div>
+                    <label for="romPesoEntrada">Peso Entrada (kg) *</label>
+                    <input type="number" id="romPesoEntrada" step="0.01">
+                </div>
+                <div>
+                    <label for="romPesoSaida">Peso Saída (kg) *</label>
+                    <input type="number" id="romPesoSaida" step="0.01">
+                </div>
+            </div>
+            <div class="form-row">
+                <div>
+                    <label for="romUmidade">Umidade (%) *</label>
+                    <input type="number" id="romUmidade" step="0.01">
+                </div>
+                <div>
+                    <label for="romImpureza">Impureza (%) *</label>
+                    <input type="number" id="romImpureza" step="0.01">
+                </div>
+            </div>
+            <div class="form-row">
+                <div>
+                    <label for="romAvariados">Avariados (%) *</label>
+                    <input type="number" id="romAvariados" step="0.01">
+                </div>
+                <div>
+                    <label for="romOutrosDescontos">Outros Descontos (%) *</label>
+                    <input type="number" id="romOutrosDescontos" step="0.01">
+                </div>
+            </div>
+            <div class="form-row full">
+                <div>
+                    <label for="romTicket">Ticket Balança</label>
+                    <input type="text" id="romTicket">
+                </div>
+            </div>
+            <button onclick="calcularRomaneio()">Calcular</button>
+        </div>
+
+        <div id="romResult" class="result-box hidden">
+            <h4>Resultado do Cálculo</h4>
+            <div class="result-row">
+                <span>Peso Bruto:</span>
+                <span class="result-value" id="resultPesoBruto">-</span>
+            </div>
+            <div class="result-row">
+                <span>Desconto Umidade:</span>
+                <span class="result-value" id="resultUmidade">-</span>
+            </div>
+            <div class="result-row">
+                <span>Desconto Impureza:</span>
+                <span class="result-value" id="resultImpureza">-</span>
+            </div>
+            <div class="result-row">
+                <span>Desconto Avariados:</span>
+                <span class="result-value" id="resultAvariados">-</span>
+            </div>
+            <div class="result-row">
+                <span>Outros Descontos:</span>
+                <span class="result-value" id="resultOutros">-</span>
+            </div>
+            <div class="result-row" style="border-top: 2px solid #27ae60; margin-top: 10px; padding-top: 10px;">
+                <span style="font-size: 18px;"><strong>Peso Líquido:</strong></span>
+                <span class="result-value" style="font-size: 18px;" id="resultPesoLiquido">-</span>
+            </div>
+            <button onclick="salvarRomaneio()" style="margin-top: 15px;">Salvar Romaneio</button>
+        </div>
+
+        <h3 style="margin-top: 30px;">Romaneios Registrados</h3>
+        <table id="romaneiosTable">
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Empresa</th>
+                    <th>Cereal</th>
+                    <th>Peso Líquido</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Fazendas Tab -->
+    <div id="fazendas" class="tab-content">
+        <div class="form-section">
+            <h3>Nova Fazenda</h3>
+            <div class="form-row full">
+                <div>
+                    <label for="fazNome">Nome da Fazenda *</label>
+                    <input type="text" id="fazNome">
+                </div>
+            </div>
+            <div class="form-row">
+                <div>
+                    <label for="fazArea">Área (hectares)</label>
+                    <input type="number" id="fazArea" step="0.01">
+                </div>
+                <div>
+                    <label for="fazIE">Inscrição Estadual</label>
+                    <input type="text" id="fazIE">
+                </div>
+            </div>
+            <button onclick="criarFazenda()">Adicionar Fazenda</button>
+        </div>
+
+        <h3>Fazendas</h3>
+        <table id="fazendTable">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Área (ha)</th>
+                    <th>IE</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Talhões Tab -->
+    <div id="talhoes" class="tab-content">
+        <div class="form-section">
+            <h3>Novo Talhão</h3>
+            <div class="form-row">
+                <div>
+                    <label for="talFazenda">Fazenda *</label>
+                    <select id="talFazenda"></select>
+                </div>
+                <div>
+                    <label for="talNumero">Número</label>
+                    <input type="number" id="talNumero">
+                </div>
+            </div>
+            <div class="form-row">
+                <div>
+                    <label for="talNome">Nome</label>
+                    <input type="text" id="talNome">
+                </div>
+                <div>
+                    <label for="talArea">Área (hectares)</label>
+                    <input type="number" id="talArea" step="0.01">
+                </div>
+            </div>
+            <button onclick="criarTalhao()">Adicionar Talhão</button>
+        </div>
+
+        <h3>Talhões</h3>
+        <table id="talhaoTable">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Número</th>
+                    <th>Área (ha)</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Empresas Tab -->
+    <div id="empresas" class="tab-content">
+        <div class="form-section">
+            <h3>Nova Empresa</h3>
+            <div class="form-row full">
+                <div>
+                    <label for="empNome">Nome da Empresa *</label>
+                    <input type="text" id="empNome">
+                </div>
+            </div>
+            <div class="form-row">
+                <div>
+                    <label for="empCNPJ">CNPJ</label>
+                    <input type="text" id="empCNPJ">
+                </div>
+                <div>
+                    <label for="empContato">Contato</label>
+                    <input type="text" id="empContato">
+                </div>
+            </div>
+            <button onclick="criarEmpresa()">Adicionar Empresa</button>
+        </div>
+
+        <h3>Empresas</h3>
+        <table id="empresaTable">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>CNPJ</th>
+                    <th>Contato</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    const API_URL = "http://localhost:8000/api";
+    let token = localStorage.getItem("token");
+    let currentUser = JSON.parse(localStorage.getItem("user") || "{}");
+
+    // Show login or dashboard based on token
+    if (token) {
+        showDashboard();
+    } else {
+        showLogin();
+    }
+
+    function toggleForm() {
+        document.getElementById("loginForm").classList.toggle("hidden");
+        document.getElementById("registerForm").classList.toggle("hidden");
+    }
+
+    function showLogin() {
+        document.getElementById("loginContainer").classList.remove("hidden");
+        document.getElementById("dashboard").classList.add("hidden");
+    }
+
+    function showDashboard() {
+        document.getElementById("loginContainer").classList.add("hidden");
+        document.getElementById("dashboard").classList.remove("hidden");
+        document.getElementById("userEmail").textContent = `Bem-vindo, ${currentUser.email}`;
+        loadAllData();
+    }
+
+    // Login
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const email = document.getElementById("loginEmail").value;
+        const password = document.getElementById("loginPassword").value;
+
+        try {
+            const response = await fetch(`${API_URL}/auth/login`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password })
+            });
+
+            if (!response.ok) throw new Error("Credenciais inválidas");
+
+            const data = await response.json();
+            token = data.access_token;
+            currentUser = data.user;
+
+            localStorage.setItem("token", token);
+            localStorage.setItem("user", JSON.stringify(currentUser));
+
+            showDashboard();
+        } catch (error) {
+            document.getElementById("loginError").textContent = error.message;
+            document.getElementById("loginError").style.display = "block";
+        }
+    });
+
+    // Register
+    document.getElementById("registerForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const email = document.getElementById("registerEmail").value;
+        const password = document.getElementById("registerPassword").value;
+        const role = document.getElementById("registerRole").value;
+
+        try {
+            const response = await fetch(`${API_URL}/auth/register`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password, role })
+            });
+
+            if (!response.ok) throw new Error("Erro ao registrar");
+
+            document.getElementById("registerSuccess").textContent = "Registro realizado! Faça login.";
+            document.getElementById("registerSuccess").style.display = "block";
+            setTimeout(() => toggleForm(), 2000);
+        } catch (error) {
+            document.getElementById("registerError").textContent = error.message;
+            document.getElementById("registerError").style.display = "block";
+        }
+    });
+
+    function logout() {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        showLogin();
+    }
+
+    function switchTab(tabName) {
+        document.querySelectorAll(".tab-content").forEach(tab => tab.classList.remove("active"));
+        document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
+        document.getElementById(tabName).classList.add("active");
+        event.target.classList.add("active");
+    }
+
+    async function apiCall(method, endpoint, data = null) {
+        const options = {
+            method,
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            }
+        };
+
+        if (data) options.body = JSON.stringify(data);
+
+        const response = await fetch(`${API_URL}${endpoint}`, options);
+        if (!response.ok) throw new Error(`Erro: ${response.status}`);
+        return response.json();
+    }
+
+    async function calcularRomaneio() {
+        try {
+            const data = {
+                id_empresa: document.getElementById("romEmpresa").value,
+                id_cereal: document.getElementById("romCereal").value,
+                peso_entrada: parseFloat(document.getElementById("romPesoEntrada").value),
+                peso_saida: parseFloat(document.getElementById("romPesoSaida").value),
+                umidade_p: parseFloat(document.getElementById("romUmidade").value),
+                impureza_p: parseFloat(document.getElementById("romImpureza").value),
+                avariados_p: parseFloat(document.getElementById("romAvariados").value),
+                outros_descontos_p: parseFloat(document.getElementById("romOutrosDescontos").value)
+            };
+
+            const result = await apiCall("POST", "/romaneios/calcular", data);
+
+            document.getElementById("resultPesoBruto").textContent = result.peso_bruto.toFixed(2);
+            document.getElementById("resultUmidade").textContent = result.peso_umidade.toFixed(2);
+            document.getElementById("resultImpureza").textContent = result.peso_impureza.toFixed(2);
+            document.getElementById("resultAvariados").textContent = result.peso_avariados.toFixed(2);
+            document.getElementById("resultOutros").textContent = result.peso_outros_descontos.toFixed(2);
+            document.getElementById("resultPesoLiquido").textContent = result.peso_liquido.toFixed(2);
+
+            document.getElementById("romResult").classList.remove("hidden");
+
+            // Store result for saving
+            window.lastRomResult = result;
+        } catch (error) {
+            alert("Erro ao calcular: " + error.message);
+        }
+    }
+
+    async function salvarRomaneio() {
+        if (!window.lastRomResult) return;
+
+        try {
+            const data = {
+                id_empresa: document.getElementById("romEmpresa").value,
+                id_cereal: document.getElementById("romCereal").value,
+                peso_entrada: parseFloat(document.getElementById("romPesoEntrada").value),
+                peso_saida: parseFloat(document.getElementById("romPesoSaida").value),
+                peso_bruto: window.lastRomResult.peso_bruto,
+                peso_umidade: window.lastRomResult.peso_umidade,
+                peso_impureza: window.lastRomResult.peso_impureza,
+                peso_avariados: window.lastRomResult.peso_avariados,
+                peso_outros_descontos: window.lastRomResult.peso_outros_descontos,
+                peso_liquido: window.lastRomResult.peso_liquido,
+                ticket_balanca: document.getElementById("romTicket").value,
+                data: new Date().toISOString().split('T')[0],
+                hora: new Date().toTimeString().split(' ')[0]
+            };
+
+            await apiCall("POST", "/romaneios", data);
+            alert("Romaneio salvo com sucesso!");
+            loadRomaneios();
+        } catch (error) {
+            alert("Erro ao salvar: " + error.message);
+        }
+    }
+
+    async function criarFazenda() {
+        try {
+            const data = {
+                nome: document.getElementById("fazNome").value,
+                area: parseFloat(document.getElementById("fazArea").value) || null,
+                ie: document.getElementById("fazIE").value || null
+            };
+
+            await apiCall("POST", "/fazendas", data);
+            alert("Fazenda criada!");
+            document.getElementById("fazNome").value = "";
+            document.getElementById("fazArea").value = "";
+            document.getElementById("fazIE").value = "";
+            loadFazendas();
+        } catch (error) {
+            alert("Erro: " + error.message);
+        }
+    }
+
+    async function criarTalhao() {
+        try {
+            const data = {
+                id_fazenda: document.getElementById("talFazenda").value,
+                numero: parseInt(document.getElementById("talNumero").value) || null,
+                nome: document.getElementById("talNome").value || null,
+                area: parseFloat(document.getElementById("talArea").value) || null
+            };
+
+            await apiCall("POST", "/talhoes", data);
+            alert("Talhão criado!");
+            document.getElementById("talNome").value = "";
+            loadTalhoes();
+        } catch (error) {
+            alert("Erro: " + error.message);
+        }
+    }
+
+    async function criarEmpresa() {
+        try {
+            const data = {
+                nome: document.getElementById("empNome").value,
+                cnpj: document.getElementById("empCNPJ").value || null,
+                contato: document.getElementById("empContato").value || null
+            };
+
+            await apiCall("POST", "/empresas", data);
+            alert("Empresa criada!");
+            document.getElementById("empNome").value = "";
+            loadEmpresas();
+        } catch (error) {
+            alert("Erro: " + error.message);
+        }
+    }
+
+    async function loadFazendas() {
+        try {
+            const data = await apiCall("GET", "/fazendas");
+            const tbody = document.querySelector("#fazendTable tbody");
+            tbody.innerHTML = data.map(f => `
+                <tr>
+                    <td>${f.nome}</td>
+                    <td>${f.area || "-"}</td>
+                    <td>${f.ie || "-"}</td>
+                    <td><button class="action-btn delete" onclick="deletarFazenda('${f.id}')">Deletar</button></td>
+                </tr>
+            `).join("");
+
+            // Load into selects
+            const select = document.getElementById("talFazenda");
+            select.innerHTML = data.map(f => `<option value="${f.id}">${f.nome}</option>`).join("");
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async function loadTalhoes() {
+        try {
+            const data = await apiCall("GET", "/talhoes");
+            const tbody = document.querySelector("#talhaoTable tbody");
+            tbody.innerHTML = data.map(t => `
+                <tr>
+                    <td>${t.nome || "-"}</td>
+                    <td>${t.numero || "-"}</td>
+                    <td>${t.area || "-"}</td>
+                    <td><button class="action-btn delete" onclick="deletarTalhao('${t.id}')">Deletar</button></td>
+                </tr>
+            `).join("");
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async function loadEmpresas() {
+        try {
+            const data = await apiCall("GET", "/empresas");
+            const tbody = document.querySelector("#empresaTable tbody");
+            tbody.innerHTML = data.map(e => `
+                <tr>
+                    <td>${e.nome}</td>
+                    <td>${e.cnpj || "-"}</td>
+                    <td>${e.contato || "-"}</td>
+                    <td><button class="action-btn delete" onclick="deletarEmpresa('${e.id}')">Deletar</button></td>
+                </tr>
+            `).join("");
+
+            // Load into selects
+            const select = document.getElementById("romEmpresa");
+            select.innerHTML = data.map(e => `<option value="${e.id}">${e.nome}</option>`).join("");
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async function loadRomaneios() {
+        try {
+            const data = await apiCall("GET", "/romaneios");
+            const tbody = document.querySelector("#romaneiosTable tbody");
+            tbody.innerHTML = data.map(r => `
+                <tr>
+                    <td>${r.data || "-"}</td>
+                    <td>${r.id_empresa || "-"}</td>
+                    <td>${r.id_cereal || "-"}</td>
+                    <td>${r.peso_liquido || "-"}</td>
+                    <td><button class="action-btn delete" onclick="deletarRomaneio('${r.id}')">Deletar</button></td>
+                </tr>
+            `).join("");
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async function loadAllData() {
+        loadFazendas();
+        loadTalhoes();
+        loadEmpresas();
+        loadRomaneios();
+    }
+
+    async function deletarFazenda(id) {
+        if (confirm("Tem certeza?")) {
+            await apiCall("DELETE", `/fazendas/${id}`);
+            loadFazendas();
+        }
+    }
+
+    async function deletarTalhao(id) {
+        if (confirm("Tem certeza?")) {
+            await apiCall("DELETE", `/talhoes/${id}`);
+            loadTalhoes();
+        }
+    }
+
+    async function deletarEmpresa(id) {
+        if (confirm("Tem certeza?")) {
+            await apiCall("DELETE", `/empresas/${id}`);
+            loadEmpresas();
+        }
+    }
+
+    async function deletarRomaneio(id) {
+        if (confirm("Tem certeza?")) {
+            await apiCall("DELETE", `/romaneios/${id}`);
+            loadRomaneios();
+        }
+    }
+</script>
+
+</body>
+</html>
